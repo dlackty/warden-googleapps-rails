@@ -1,24 +1,50 @@
-# Warden::Googleapps::Rails
+# warden-googleapps-rails
 
-TODO: Write a gem description
+A simple Rails integration using Google Apps OAuth.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'warden-googleapps-rails'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install warden-googleapps-rails
+It's built on [warden-googleapps](https://github.com/atoms/warden-googleapps), and heavily inspired by [warden-github-rails](https://github.com/fphilipe/warden-github-rails).
 
 ## Usage
 
-TODO: Write usage instructions here
+`warden-googleapps-rails` provides both controller-based and router-based authentication for Rails apps.
+
+First of all, you need to configure this gem by creating an initializer like `config/initializers/warden_googleapps_rails.rb`, and include:
+
+```ruby
+Warden::GoogleApps::Rails.setup do |config|
+  # Required
+  config.google_apps_domain = "thepolydice.com"
+  
+  # Optional
+  # config.google_apps_endpoint = 
+  # config.google_apps_redirect_url
+end
+```
+
+### Controller-based authentication
+
+There're several available authentication methods for controllers.
+
+```ruby
+googleapps_authenticate! # Required Google Apps login
+googleapps_authenticate?
+
+Thus you could write something like:
+
+```ruby
+class PostsController < ApplicationController
+  # Require user login for all actions
+  before_filter :googleapps_authenticate! 
+  
+  def new
+  	
+  # …
+end
+```
+
+### Router-based authentication
+
+
 
 ## Contributing
 
