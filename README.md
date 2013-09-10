@@ -6,50 +6,86 @@ It's built on [warden-googleapps](https://github.com/atoms/warden-googleapps), a
 
 ## Usage
 
-`warden-googleapps-rails` provides both controller-based and router-based authentication for Rails apps.
+`warden-googleapps-rails` provides both controller-based and router-based authentication methods for Rails apps.
 
 First of all, you need to configure this gem by creating an initializer like `config/initializers/warden_googleapps_rails.rb`, and include:
 
 ```ruby
 Warden::GoogleApps::Rails.setup do |config|
   # Required
-  config.google_apps_domain = "thepolydice.com"
+  config.google_apps_domain = "example.org"
   
   # Optional
-  # config.google_apps_endpoint = 
-  # config.google_apps_redirect_url
+  # config.google_apps_endpoint = "http://www.google.com/accounts/o8/id" # this is gmail
+  # config.google_apps_redirect_url =  "http://example.org/verify_url" # endpoint where google apps redirects to after successful authentication
 end
 ```
 
-### Controller-based authentication
+### Controller Helpers
 
-There're several available authentication methods for controllers.
+There're several authentication methods for controllers.
 
 ```ruby
-googleapps_authenticate! # Required Google Apps login
-googleapps_authenticate?
+# Redirect user to Google Apps OAuth if user not log in
+googleapps_authenticate!
+
+# Return whether user has logged in
+googleapps_authenticate? 
+
+# Get user object
+googleapps_user
+
+# Log out
+googleapps_logout
+```
 
 Thus you could write something like:
 
 ```ruby
 class PostsController < ApplicationController
-  # Require user login for all actions
+  # Ask user log in for all actions
   before_filter :googleapps_authenticate! 
   
   def new
-  	
+  	@user = googleapps_user
+  	# …
+  end
   # …
 end
 ```
 
-### Router-based authentication
+### Router Constraints
 
+In your `routes.rb` you could simply wrap your resources:
 
+```ruby
+MyApp::Application.routes.draw do
+  # …
 
-## Contributing
+  namespace :admin do do    
+    # Initialize Google Apps authentication flow if user not log in
+    googleapps_authenticate do
+      resources :posts
+    end
+    
+    # Require user log in but will not redirect to OAuth flow
+    googleapps_authenticated do
+      resources :users
+    end
+  # …
+  end
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+end
+```
+
+## Contact
+
+Richard Lee
+
+- http://github.com/dlackty
+- http://twitter.com/dlackty
+- dlackty@gmail.com
+
+## License
+
+`warden-googleapps-rails` is available under the MIT license. See the `LICENSE.txt` file for more info.
