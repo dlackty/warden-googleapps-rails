@@ -2,7 +2,7 @@
 
 A simple Rails integration using Google Apps OAuth.
 
-It's built on [warden-googleapps](https://github.com/atoms/warden-googleapps), and heavily inspired by [warden-github-rails](https://github.com/fphilipe/warden-github-rails).
+It's built on [warden-googleapps](https://github.com/atmos/warden-googleapps), and heavily inspired by [warden-github-rails](https://github.com/fphilipe/warden-github-rails).
 
 ## Usage
 
